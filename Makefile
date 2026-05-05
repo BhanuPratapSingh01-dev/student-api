@@ -19,6 +19,10 @@ start-db:
 		echo "✅ MongoDB already running"; \
 	fi
 
+wait-db:
+	@echo "⏳ Waiting for MongoDB to be ready..."
+	@sleep 5
+
 run-migrations:
 	@echo "📦 Running DB migrations..."
 	docker-compose run --rm api node src/config/db.js || echo "⚠️ Migration skipped or already applied"
@@ -28,6 +32,7 @@ run-migrations:
 # -------------------------
 run-api:
 	$(MAKE) start-db
+	$(MAKE) wait-db
 	$(MAKE) run-migrations
 	@echo "🚀 Starting API..."
 	docker-compose up --build api
@@ -47,6 +52,8 @@ ci-build:
 
 test:
 	@echo "🧪 Running tests..."
+	$(MAKE) start-db
+	$(MAKE) wait-db
 	npm test
 
 lint:

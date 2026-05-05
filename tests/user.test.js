@@ -1,19 +1,21 @@
+jest.setTimeout(20000); // ⬅️ prevents timeout issues
+
 const request = require("supertest");
 const mongoose = require("mongoose");
-const { MongoMemoryServer } = require("mongodb-memory-server");
 const app = require("../src/app");
 
-let mongoServer;
-
 beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  const uri = mongoServer.getUri();
-  await mongoose.connect(uri);
+  try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/test-db");
+  } catch (err) {
+    console.error("Test DB connection failed:", err);
+    throw err;
+  }
 });
 
 afterAll(async () => {
+  await mongoose.connection.dropDatabase(); // ⬅️ cleanup
   await mongoose.connection.close();
-  await mongoServer.stop();
 });
 
 describe("User API", () => {
