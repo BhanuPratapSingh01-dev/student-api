@@ -1,6 +1,7 @@
 require("dotenv").config({
   path: process.env.NODE_ENV === "development" ? ".env.local" : ".env"
 });
+
 const express = require("express");
 const connectDB = require("./config/db");
 const logger = require("./utils/logger");
@@ -11,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// ✅ Health check (keep it simple & BEFORE routes)
+// health check
 app.get("/health", (req, res) => {
   return res.status(200).json({
     status: "UP",
@@ -20,8 +21,10 @@ app.get("/health", (req, res) => {
   });
 });
 
-// DB connection
-connectDB();
+// ✅ DB connection only when NOT testing
+if (process.env.NODE_ENV !== "test") {
+  connectDB();
+}
 
 // routes
 app.use("/api/v1/users", require("./routes/userRoutes"));
@@ -36,5 +39,4 @@ if (process.env.NODE_ENV !== "test") {
   });
 }
 
-// export app for testing
 module.exports = app;

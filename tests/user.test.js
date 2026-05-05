@@ -1,32 +1,24 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
+const { MongoMemoryServer } = require("mongodb-memory-server");
 const app = require("../src/app");
 
-describe("User API", () => {
+let mongoServer;
 
-  afterAll(async () => {
-    await mongoose.connection.close();   // ✅ CLOSE DB
-  });
-
-  it("should get all users", async () => {
-    const res = await request(app).get("/api/v1/users");
-    expect(res.statusCode).toBe(200);
-  });
-
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri);
 });
-const request = require("supertest");
-const mongoose = require("mongoose");
-const app = require("../src/app");
+
+afterAll(async () => {
+  await mongoose.connection.close();
+  await mongoServer.stop();
+});
 
 describe("User API", () => {
-
-  afterAll(async () => {
-    await mongoose.connection.close();   // ✅ CLOSE DB
-  });
-
   it("should get all users", async () => {
     const res = await request(app).get("/api/v1/users");
     expect(res.statusCode).toBe(200);
   });
-
 });
