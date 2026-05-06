@@ -72,6 +72,10 @@ docker-login:
 	echo $$DOCKER_PASSWORD | docker login -u $$DOCKER_USERNAME --password-stdin
 
 docker-push:
-	@echo "🚀 Pushing Docker image..."
+	@echo "🚀 Tagging Docker image..."
+	docker tag $(IMAGE_NAME):$(VERSION) $(DOCKER_USERNAME)/$(IMAGE_NAME):latest
 	docker tag $(IMAGE_NAME):$(VERSION) $(DOCKER_USERNAME)/$(IMAGE_NAME):$(VERSION)
+
+	@echo "🚀 Pushing Docker images..."
+	docker push $(DOCKER_USERNAME)/$(IMAGE_NAME):latest
 	docker push $(DOCKER_USERNAME)/$(IMAGE_NAME):$(VERSION)
