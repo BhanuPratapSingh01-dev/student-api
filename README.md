@@ -1,164 +1,228 @@
 # 🚀 Student API
 
-## 📌 Purpose
+A production-ready REST API built using Node.js, Express, and MongoDB with complete DevOps integration using Docker and GitHub Actions.
 
-A REST API to manage users using **Node.js, Express, and MongoDB**.
-This project is fully containerized using Docker and follows DevOps best practices with automated setup using Makefile.
+This project is fully containerized using Docker and follows DevOps best practices with:
+
+- Dockerized deployment
+- Automated local setup using Makefile
+- CI pipeline using GitHub Actions
+- Self-hosted GitHub runner
+- Automated testing & linting
+- Docker image versioning
 
 ---
 
-## 🔧 Prerequisites
+📂 Project Structure
+
+student-api/
+│
+├── src/
+│   ├── controllers/
+│   ├── routes/
+│   ├── models/
+│   ├── middleware/
+│   ├── utils/
+│   └── app.js
+│
+├── tests/
+├── .github/workflows/
+├── Dockerfile
+├── docker-compose.yml
+├── Makefile
+├── package.json
+└── README.md
+
+
+# 🔧 Prerequisites
 
 Make sure the following tools are installed:
 
-* Docker
-* Docker Compose
-* Make
+- Docker
+- Docker Compose
+- Make
 
 👉 Install Docker Desktop: https://www.docker.com/products/docker-desktop
 
 ---
 
-## ⚙️ Features
+# ⚙️ Features
 
-* ✅ RESTful APIs (CRUD operations)
-* ✅ API Versioning (`/api/v1`)
-* ✅ Health Check Endpoint (`/health`)
-* ✅ Error Logging
-* ✅ Dockerized Application
-* ✅ Environment-based Configuration
-* ✅ MongoDB Integration
+- ✅ RESTful APIs (CRUD operations)
+- ✅ API Versioning (`/api/v1`)
+- ✅ Health Check Endpoint (`/health`)
+- ✅ Error Logging
+- ✅ Dockerized Application
+- ✅ Environment-based Configuration
+- ✅ MongoDB Integration
+- ✅ Automated CI Pipeline
+- ✅ Docker Image Versioning
+- ✅ Self-hosted GitHub Actions Runner
 
 ---
 
-## 🚀 Quick Start
+# 🚀 Quick Start
 
-### 1. Clone Repository
+## 1. Clone Repository
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/BhanuPratapSingh01-dev/student-api.git
 cd student-api
-```
 
-### 2. Create `.env` File
+2. Create .env File
 
-```env
 PORT=8000
 NODE_ENV=production
 MONGO_URI=mongodb://mongo:27017/my-app-1
-```
 
----
-
-## ▶️ Run Application
-
-```bash
+▶️ Run Application
 make run-api
-```
 
----
-
-## 🔄 Execution Flow
-
-When you run:
-
-```bash
+🔄 Execution Flow
 make run-api
-```
 
 The following steps happen automatically:
+1.MongoDB container starts
+2.Database migrations run
+3.API Docker image builds
+4.API container starts
 
-1. MongoDB container starts (if not already running)
-2. Database migrations are executed
-3. API container is built and started
 
----
+🧰 Available Make Commands
 
-## 🐳 Available Make Commands
-
-```bash
 make start-db        # Start MongoDB container
 make run-migrations  # Run database migrations
 make build-api       # Build API Docker image
 make run-api         # Run full application (DB + Migration + API)
 make down            # Stop all containers
 make logs            # View container logs
-```
+make test            # Run tests
+make lint            # Run ESLint
 
----
 
-## 🔧 Manual Docker Commands (Optional)
+🐳 Manual Docker Commands 
 
-### Build Image
+ Build Docker Image:-
+       docker build -t student-api:1.0.0 .
 
-```bash
-docker build -t student-api:1.0.0 .
-```
+ Run Docker Container:-
+       docker run -p 8000:8000 \
+       --network my-network \
+       --env-file .env \
+       student-api:1.0.0
 
-### Run Container
 
-```bash
-docker run -p 8000:8000 --network my-network --env-file .env student-api:1.0.0
-```
+📡API Endpoints
 
----
+| Method | Endpoint            | Description    |
+| ------ | ------------------- | -------------- |
+| GET    | `/api/v1/users`     | Get all users  |
+| GET    | `/api/v1/users/:id` | Get user by ID |
+| POST   | `/api/v1/users`     | Create user    |
+| PATCH  | `/api/v1/users/:id` | Update user    |
+| DELETE | `/api/v1/users/:id` | Delete user    |
 
-## 📡 API Endpoints
 
-### Users
+❤️ Health Check
 
-* GET `/api/v1/users` → Get all users
-* GET `/api/v1/users/:id` → Get user by ID
-* POST `/api/v1/users` → Create user
-* PATCH `/api/v1/users/:id` → Update user
-* DELETE `/api/v1/users/:id` → Delete user
+Endpoint
+   GET /health
 
----
+Response
 
-## ❤️ Health Check
-
-```bash
-GET /health
-```
-
-Response:
-
-```json
 {
   "status": "UP",
   "message": "Server is running"
 }
-```
 
----
 
-## 🧪 Run Tests
 
-```bash
-npm test
-```
+🧪 Testing & Code Quality
 
----
+Run Tests
+   *npm test*
 
-## 🛠 Tech Stack
+Run ESLint
+   *npm rum lint*
 
-* Node.js
-* Express.js
-* MongoDB
-* Docker
+🚀 CI Pipeline
+This project uses GitHub Actions with a self-hosted runner to automate the CI workflow.
 
----
+✅ CI Pipeline Stages
+Install Dependencies
+Run Tests
+Run ESLint
+Docker Login
+Build Docker Image
+Push Docker Images to Docker Hub
 
-## 📦 Versioning
+✅ Workflow Features
+Self-hosted GitHub Actions Runner
+Automated Docker Image Build
+Automated Docker Push
+Versioned Docker Tags (latest, 1.0.0)
+Automated Testing
+ESLint Integration
 
-This project follows **Semantic Versioning (SemVer)**:
+✅ Trigger Conditions
+The CI pipeline automatically triggers when changes are made to:
 
-* `1.0.0` → Initial release
-* `1.0.1` → Bug fixes
-* `1.1.0` → New features
+src/**
+package.json
+package-lock.json
+.github/workflows/**
 
----
+The workflow can also be triggered manually using GitHub Actions.
 
-## 👨‍💻 Author
 
+🐳 Docker Images
+
+Pull Latest Image
+     *docker pull bhanurider/student-api:latest*
+
+Pull Versioned Image
+     *docker pull bhanurider/student-api:1.0.0*
+
+
+
+📦 Docker Hub Repository
+https://hub.docker.com/r/bhanurider/student-api
+
+
+
+🔄 CI Workflow Architecture
+Developer
+   ↓
+GitHub Repository
+   ↓
+GitHub Actions
+   ↓
+Self-hosted Runner
+   ↓
+Docker Build
+   ↓
+Docker Hub
+
+
+🛠 Tech Stack
+Node.js
+Express.js
+MongoDB
+Docker
+Docker Compose
+GitHub Actions
+Jest
+Supertest
+ESLint
+Makefile
+
+
+📌 API Versioning
+
+This project follows Semantic Versioning (SemVer):
+1.0.0 → Initial release
+1.0.1 → Bug fixes
+1.1.0 → New features
+
+👨‍💻 Author
 Bhanu Pratap Singh
