@@ -224,5 +224,43 @@ This project follows Semantic Versioning (SemVer):
 1.0.1 → Bug fixes
 1.1.0 → New features
 
+## Apple Silicon (M1/M2/M3) Note
+
+This project includes a complete Vagrant-based deployment setup.
+
+However, on Apple Silicon Macs:
+- VirtualBox does not support x86 Vagrant boxes properly
+- VMware Fusion requires the Vagrant VMware Utility which may fail depending on macOS security restrictions
+
+The deployment architecture, provisioning scripts, Docker Compose setup, Nginx load balancing, and automation are fully implemented and can be verified locally using Docker Compose.
+
+To test locally:
+
+```bash
+make up
+
+Application will be available at:
+
+http://localhost:8080
+
+
+
+---
+
+# 3. Demonstrate Locally Using Docker Compose
+
+Run:
+
+```bash id="6vqeyu"
+make up
+
+-->docker ps
+**
+Expected:- api1
+api2
+mongodb
+nginx-lb
+**
+
 👨‍💻 Author
 Bhanu Pratap Singh
