@@ -143,7 +143,7 @@ Run Tests
    *npm test*
 
 Run ESLint
-   *npm rum lint*
+   *npm run lint*
 
 🚀 CI Pipeline
 This project uses GitHub Actions with a self-hosted runner to automate the CI workflow.
@@ -261,6 +261,93 @@ api2
 mongodb
 nginx-lb
 **
+ 
+# 🌐 Nginx Load Balancer
+
+Nginx is configured as a reverse proxy and load balancer.
+
+Configuration file:
+```text
+nginx/nginx.conf
+```
+
+The API is exposed on:
+
+```text
+http://localhost:8080
+```
+
+
+# 📦 Vagrant Provisioning
+
+The project includes:
+
+- Vagrantfile
+- Automated provisioning using `scripts/setup.sh`
+
+Provisioning installs:
+- Docker
+- Docker Compose
+- Make
+
+To provision:
+
+```bash
+vagrant up
+```
+
+
+# 🏗 Deployment Architecture
+
+The deployment consists of:
+
+- 2 API containers
+- 1 MongoDB container
+- 1 Nginx load balancer container
+
+Nginx distributes traffic between both API containers using reverse proxy load balancing.
+
+```text
+                ┌─────────────┐
+                │   Nginx     │
+                │ LoadBalancer│
+                └──────┬──────┘
+                       │
+        ┌──────────────┴──────────────┐
+        │                             │
+ ┌──────▼──────┐               ┌──────▼──────┐
+ │ API Node 1  │               │ API Node 2  │
+ └─────────────┘               └─────────────┘
+                │
+                ▼
+          ┌──────────┐
+          │ MongoDB  │
+          └──────────┘
+```
+
+Verify API health:
+
+```bash
+curl http://localhost:8080/health
+```
+
+
+# ✅ Final Verification
+
+Verify running containers:
+
+```bash
+docker compose ps
+```
+
+Expected containers:
+
+- api1
+- api2
+- mongodb
+- nginx-lb
+
+
 
 👨‍💻 Author
 Bhanu Pratap Singh
