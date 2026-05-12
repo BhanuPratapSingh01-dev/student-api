@@ -347,7 +347,14 @@ Expected containers:
 - mongodb
 - nginx-lb
 
+## Kubernetes Cluster Setup
 
+- Created a 3-node Minikube cluster
+- Added node labels:
+  - type=application
+  - type=database
+  - type=dependent_services
+- Verified scheduling using nodeSelector
 
 👨‍💻 Author
 Bhanu Pratap Singh
