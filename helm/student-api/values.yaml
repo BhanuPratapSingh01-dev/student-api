@@ -1,0 +1,46 @@
+replicaCount: 2
+
+image:
+  repository: student-api
+  tag: v2
+  pullPolicy: IfNotPresent
+
+containerPort: 8000
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  className: nginx
+  host: student-api.local
+
+httpRoute:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+secret:
+  name: mongodb-secret
+
+vault:
+  token: root
+  secretStoreName: vault-backend
+  server: "http://vault.vault.svc.cluster.local:8200"
+  path: secret
+  version: v2
+
+externalSecret:
+  name: mongodb-secret
+  refreshInterval: 1h
+  targetSecret: mongodb-secret
+  remoteKey: student-api

@@ -10,13 +10,25 @@ This project is fully containerized using Docker and follows DevOps best practic
 - Self-hosted GitHub runner
 - Automated testing & linting
 - Docker image versioning
+- Node.js REST API
+- MongoDB
+- Kubernetes
+- Helm
+- Hashicorp Vault
+- External Secrets Operator (ESO)
+- NGINX Ingress Controller
 
 ---
 
 📂 Project Structure
 
 student-api/
-│
+|
+├──helm/
+|    └── student-api/ 
+|
+├── kubernetes/
+|
 ├── src/
 │   ├── controllers/
 │   ├── routes/
@@ -41,6 +53,8 @@ Make sure the following tools are installed:
 - Docker
 - Docker Compose
 - Make
+- Helm
+- Homebrew(Mac)
 
 👉 Install Docker Desktop: https://www.docker.com/products/docker-desktop
 
@@ -58,8 +72,35 @@ Make sure the following tools are installed:
 - ✅ Automated CI Pipeline
 - ✅ Docker Image Versioning
 - ✅ Self-hosted GitHub Actions Runner
-
+- ✅ Kubernetes Deployment
+- ✅ Helm-Based Release Management
+- ✅ Vault-Based Secret Management
+- ✅ External Secrets Operator Integration
+- ✅ Environment-specific value files
+- ✅ Ingress-Based Traffic Routing
+- ✅ Production-style Kubernetes Deployment
 ---
+
+## Architecture
+
+Client
+   ↓
+Ingress
+   ↓
+Service
+   ↓
+Student API Pod
+   ↓
+MongoDB
+
+Vault
+   ↓
+External Secrets Operator
+   ↓
+Kubernetes Secret
+   ↓
+Application Environment Variables
+
 
 # 🚀 Quick Start
 
@@ -355,6 +396,205 @@ Expected containers:
   - type=database
   - type=dependent_services
 - Verified scheduling using nodeSelector
+
+# Helm-Based Kubernetes Deployment
+
+1.Start Kubernetes Cluster
+
+## Start Minikube
+
+```bash
+minikube start --nodes 3 --driver=docker
+
+
+---
+
+2.Install Helm
+
+```md id="3jwm1m"
+## Install Helm
+
+```bash
+brew install helm
+
+
+---
+
+3.Add Helm Repositories
+
+```md id="pjwm4t"
+## Add Helm Repositories
+
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+helm repo add hashicorp https://helm.releases.hashicorp.com
+
+helm repo add external-secrets https://charts.external-secrets.io
+
+helm repo update
+
+
+
+4. Install MongoDB
+
+```md id="8jwm7q"
+## Install MongoDB
+
+```bash
+helm install mongodb bitnami/mongodb \
+  --namespace database \
+  --create-namespace \
+  --set auth.rootPassword=rootpassword \
+  --set auth.username=student \
+  --set auth.password=studentpassword \
+  --set auth.database=studentdb
+
+
+---
+
+5. Install Vault
+
+```md id="qjwm2v"
+## Install Vault
+
+```bash
+helm install vault hashicorp/vault \
+  --namespace vault \
+  --create-namespace \
+  --set "server.dev.enabled=true"
+
+
+
+---
+
+6. Install ESO
+
+```md id="hjwm6r"
+## Install External Secrets Operator
+
+```bash
+helm install external-secrets \
+external-secrets/external-secrets \
+-n external-secrets \
+--create-namespace
+
+---
+
+7.Create Vault Secrets
+
+```md id="0jwm4q"
+## Configure Vault Secret
+
+```bash
+vault kv put secret/student-api \
+username=root \
+password=rootpassword \
+MONGO_URI="mongodb://root:rootpassword@mongodb.database.svc.cluster.local:27017/studentdb?authSource=admin"
+
+---
+
+8.Deploy Application Using Helm
+
+```md id="vjwm9m"
+## Deploy Student API
+
+```bash
+helm upgrade --install student-api . \
+-f values-dev.yaml \
+-n student-api \
+--create-namespace
+
+---
+
+9.Verify Deployment
+
+```md id="6jwm1t"
+## Verify Deployment
+
+```bash
+kubectl get all -n student-api
+
+---
+
+10.Port Forward
+
+```md id="fjwm5x"
+## Access Application
+
+```bash
+kubectl port-forward svc/student-api 8000:80 -n student-api
+
+---
+
+11.Helm Upgrade
+
+```md id="rjwm8p"
+## Upgrade Application
+
+```bash
+helm upgrade student-api . \
+-f values-dev.yaml \
+-n student-api
+
+
+---
+
+12.Helm Rollback
+
+```md id="8jwm3r"
+## Rollback Deployment
+
+```bash
+helm rollback student-api 1 -n student-api
+
+---
+
+13.Troubleshooting Section
+
+VERY important.
+
+Example:
+
+```md id="yjwm7n"
+## Troubleshooting
+
+### Check Pod Logs
+
+```bash
+kubectl logs <pod-name> -n student-api
+
+---
+
+->Check Pod Events
+'kubectl describe pod <pod-name> -n student-api'
+
+->Render Helm Templates
+'helm template student-api .'
+
+->Validate Helm Chart
+'helm lint .'
+
+---
+
+14.Learning Outcomes
+
+This makes your README look strong.
+
+Example:
+
+```md id="hjwm4v"
+## Learning Outcomes
+
+- Helm templating
+- Kubernetes release management
+- Vault secret management
+- External Secrets Operator integration
+- Kubernetes networking
+- Production-style deployment workflows
+- Kubernetes troubleshooting
+
+
 
 👨‍💻 Author
 Bhanu Pratap Singh
