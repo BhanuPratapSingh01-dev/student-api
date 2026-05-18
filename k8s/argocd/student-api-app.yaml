@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: student-api
+  namespace: argocd
+
+spec:
+  project: student-api-project
+
+  source:
+    repoURL: https://github.com/BhanuPratapSingh01-dev/student-api.git
+    targetRevision: main
+    path: helm/student-api
+
+    helm:
+      valueFiles:
+        - values-dev.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: student-api
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true
