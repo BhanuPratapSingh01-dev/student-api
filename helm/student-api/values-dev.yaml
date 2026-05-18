@@ -2,5 +2,5 @@ replicaCount: 2
 
 image:
     repository: bhanurider/student-api
-    tag: latest
+    tag: 59e57fa
     pullPolicy: Always
