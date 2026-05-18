@@ -1,4 +1,4 @@
-# 🚀 Student API
+# Student API - GitOps Kubernetes Deployment Platform
 
 A production-ready REST API built using Node.js, Express, and MongoDB with complete DevOps integration using Docker and GitHub Actions.
 
@@ -17,6 +17,7 @@ This project is fully containerized using Docker and follows DevOps best practic
 - Hashicorp Vault
 - External Secrets Operator (ESO)
 - NGINX Ingress Controller
+- ArgoCD GitOps
 
 ---
 
@@ -83,22 +84,28 @@ Make sure the following tools are installed:
 
 ## Architecture
 
-Client
-   ↓
-Ingress
-   ↓
-Service
-   ↓
-Student API Pod
-   ↓
-MongoDB
-
+Developer Push
+      ↓
+GitHub Actions CI
+      ↓
+Docker Build & Push
+      ↓
+Update Helm values.yaml
+      ↓
+Push back to GitHub
+      ↓
+ArgoCD detects changes
+      ↓
+Kubernetes deployment sync
+      ↓
+Application rollout
+      ↓
 Vault
-   ↓
+      ↓
 External Secrets Operator
-   ↓
+      ↓
 Kubernetes Secret
-   ↓
+      ↓
 Application Environment Variables
 
 
@@ -256,7 +263,11 @@ Jest
 Supertest
 ESLint
 Makefile
-
+ArgoCD
+Hashicorp Vault
+External Secrets Operator
+Helm
+Minikibe
 
 📌 API Versioning
 
@@ -584,6 +595,7 @@ This makes your README look strong.
 Example:
 
 ```md id="hjwm4v"
+
 ## Learning Outcomes
 
 - Helm templating
@@ -593,6 +605,100 @@ Example:
 - Kubernetes networking
 - Production-style deployment workflows
 - Kubernetes troubleshooting
+
+
+Kubernetes Architecture
+## Namespaces
+
+- student-api
+- database
+- vault
+- external-secrets
+- argocd
+
+ArgoCD Setup
+## ArgoCD GitOps Workflow
+
+ArgoCD continuously watches the GitHub repository and automatically synchronizes Kubernetes resources whenever Helm values or manifests change.
+
+CI/CD Workflow
+
+Code Push
+   ↓
+GitHub Actions
+   ↓
+Docker Image Build
+   ↓
+Push Image
+   ↓
+Update values-dev.yaml
+   ↓
+Commit Back To GitHub
+   ↓
+ArgoCD Detects Change
+   ↓
+Automatic Kubernetes Deployment
+
+
+Secret Management Workflow
+
+Vault
+   ↓
+External Secrets Operator
+   ↓
+Kubernetes Secret
+   ↓
+Application Pod
+
+--------------------------------------------------------------------------------
+
+ **Deployment Instructions**
+
+ 1.Start Minikube
+
+Bash-> 'minikube start --nodes=3'
+
+
+ 2.Install ArgoCD
+
+Bash-> 'kubectl apply -n argocd -f k8s/argocd/install.yaml'
+
+ 3.Deploy Application
+
+Bash-> 'helm upgrade --install student-api ./helm/student-api -n student-api'
+
+ 4.Access ArgoCD UI
+
+Bash-> 'kubectl port-forward svc/argocd-server -n argocd 8080:443'
+
+--------------------------------------------------------------------------------
+
+GitOps Validation
+->Changing replicaCount in values-dev.yaml automatically triggered Kubernetes rollout through ArgoCD auto-sync.
+
+Troubleshooting Section
+## Troubleshooting
+
+- ImagePullBackOff
+- CrashLoopBackOff
+- Vault sync issues
+- MongoDB authentication issues
+- Ingress networking issues
+- Kubernetes service targetPort mismatch
+- ArgoCD CRD installation issues
+
+Learning Outcomes
+## Learning Outcomes
+
+- Kubernetes networking
+- Helm templating
+- GitOps architecture
+- CI/CD automation
+- Secret management
+- Kubernetes reconciliation loops
+- ArgoCD auto-sync workflows
+- Production-style deployment strategies
+
 
 
 
