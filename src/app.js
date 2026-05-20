@@ -45,7 +45,7 @@ const PORT = process.env.PORT || 8000;
 // Start server only when NOT testing
 if (process.env.NODE_ENV !== "test") {
   console.log("GitOps Pipeline Test");
-  logger.info("Starting server...");g
+  logger.info("Starting server...");
 
   app.listen(PORT, "0.0.0.0", () => {
     logger.info(`Server running on PORT ${PORT}`);
